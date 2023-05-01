@@ -4,18 +4,47 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Homework 11</title>
-    <link rel="stylesheet" href="./sass/index.scss" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <form class="search-form" id="search-form">
-      <input
-        type="text"
-        name="searchQuery"
-        autocomplete="off"
-        placeholder="Search images..."
-      />
-      <button type="submit">Search</button>
-    </form>
+    <section class="search-section section">
+      <a class="pixabay-link" href="https://pixabay.com/" target="_blank">
+        <span>Images are free from</span>
+        <img
+          class="pixabay-logo"
+          src="./images/pixabay-logo.svg"
+          alt="pixabay logo"
+        />
+      </a>
+      <form class="search-form" id="search-form">
+        <div class="search-wrapper">
+          <input
+            class="search-box"
+            type="text"
+            name="searchQuery"
+            autocomplete="off"
+            placeholder="Search images..."
+          />
+          <button class="submit-btn" type="submit">
+            <svg width="25" height="25">
+              <use href="./images/symbol-defs.svg#icon-search"></use>
+            </svg>
+          </button>
+        </div>
+      </form>
+    </section>
+    <section class="gallery-section section">
+      <div class="gallery">
+        <!-- <button type="button" class="load-more">Load more</button> -->
+      </div>
+    </section>
     <script type="module" src="./index.js"></script>
   </body>
 </html>
