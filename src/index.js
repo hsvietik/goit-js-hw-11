@@ -2,38 +2,60 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { fetchPictures } from './js/fetchPictures';
+import { createMarkup } from './js/createMarkup';
 const searchForm = document.querySelector('#search-form');
 const gallery = document.querySelector('.gallery');
-let page = 1;
-searchForm.addEventListener('submit', handleSubmit);
-function handleSubmit(evt) {
+const loadMoreBtn = document.querySelector('.load-more');
+let currentPage;
+let term;
+loadMoreBtn.addEventListener('click', loadMorePictures);
+searchForm.addEventListener('submit', searchPictures);
+
+function searchPictures(evt) {
   evt.preventDefault();
-  const term = evt.target.searchQuery.value;
-  fetchPictures(term, page)
+  console.log(currentPage);
+  currentPage = 10;
+  term = evt.target.searchQuery.value.trim();
+  if (!term) {
+    cleanFields();
+    return Notify.failure(`Enter a search query, please.`);
+  }
+  fetchPictures(term, currentPage)
     .then(data => {
+      if (!data.data.hits.length) {
+        cleanFields();
+        return Notify.failure(
+          `Sorry, there are no images matching your search query. Please try again.`
+        );
+      }
+      Notify.success(`Hooray! We found ${data.data.totalHits} images.`);
       gallery.innerHTML = createMarkup(data.data.hits);
+      loadMoreBtn.style.display = 'block';
     })
     .catch(err => {
       Notify.failure(`Oops, something went wrong`);
     });
 }
-function createMarkup(hits) {
-  return hits
-    .map(
-      ({
-        id,
-        webformatURL,
-        largeImageURL,
-        tags,
-        likes,
-        views,
-        comments,
-        downloads,
-      }) => {
-        return `<div class="photo-card" id='${id}'><img src="${webformatURL}" alt="${tags}" loading="lazy" /><div class="info">
-    <p class="info-item"><b>Likes</b>${likes}</p><p class="info-item"><b>Views</b>${views}</p><p class="info-item"><b>Comments</b>
-      ${comments}</p><p class="info-item"><b>Downloads</b>${downloads}</p></div></div>`;
+
+function loadMorePictures() {
+  currentPage += 1;
+  fetchPictures(term, currentPage)
+    .then(data => {
+      gallery.insertAdjacentHTML('beforeend', createMarkup(data.data.hits));
+      if (currentPage > data.data.totalHits / 40) {
+        loadMoreBtn.style.display = 'none';
+        gallery.insertAdjacentHTML(
+          'beforeend',
+          `<p class='result-text'>We're sorry, but you've reached the end of search results.</p>`
+        );
       }
-    )
-    .join('');
+    })
+    .catch(err => {
+      Notify.failure(`Oops, something went wrong`);
+    });
+}
+function cleanFields() {
+  searchForm.reset();
+  gallery.innerHTML = '';
+  loadMoreBtn.style.display = 'none';
 }
