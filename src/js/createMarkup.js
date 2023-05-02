@@ -11,8 +11,8 @@ export function createMarkup(hits) {
         comments,
         downloads,
       }) => {
-        return `<a class='card-link photo-card' href=${largeImageURL}><img class='card-img' src="${webformatURL}" alt="${tags}" loading="lazy" /><div class="info"><p class="info-item"><b>Likes</b>${likes}</p><p class="info-item"><b>Views</b>${views}</p><p class="info-item"><b>Comments</b>
-        ${comments}</p><p class="info-item"><b>Downloads</b>${downloads}</p></div></a>`;
+        return `<a class='card-link' href=${largeImageURL}><li class='photo-card'><img class='card-img' src="${webformatURL}" alt="${tags}" loading="lazy" /><div class="info"><p class="info-item"><b>Likes</b>${likes}</p><p class="info-item"><b>Views</b>${views}</p><p class="info-item"><b>Comments</b>
+        ${comments}</p><p class="info-item"><b>Downloads</b>${downloads}</p></div></li></a>`;
       }
     )
     .join('');
