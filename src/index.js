@@ -33,8 +33,15 @@ function searchPictures(evt) {
       Notify.success(`Hooray! We found ${data.data.totalHits} images.`);
       gallery.innerHTML = createMarkup(data.data.hits);
       lightbox.refresh();
-
-      loadMoreBtn.style.display = 'block';
+      if (currentPage > data.data.totalHits / 40) {
+        loadMoreBtn.style.display = 'none';
+        gallery.insertAdjacentHTML(
+          'beforeend',
+          `<p class='result-text'>We're sorry, but you've reached the end of search results.</p>`
+        );
+      } else {
+        loadMoreBtn.style.display = 'block';
+      }
     })
     .catch(err => {
       Notify.failure(`Oops, something went wrong`);
